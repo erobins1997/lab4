@@ -261,16 +261,13 @@ def execute_take(item_id):
     "You cannot take that."
     """
     global current_mass
-    #check items in that room
-    if all_items[item_id] in current_room["items"]:
-        if (current_mass + int(all_items[item_id]["mass"])) <= 3000:
-            current_room["items"].remove(all_items[item_id])
-            inventory.append(all_items[item_id])
-            current_mass = int(current_mass) + int(all_items[item_id]["mass"])
-        else:
-            print("you need to drop items before you can do this")
-    else: print("you cant take that")
-    pass
+    for items in all_items:
+        if items["id"] == item_id:
+            if items not in inventory:
+                inventory.append(items)
+                current_room["items"].remove(items)
+                current_mass += int((items["mass"]))
+    pass  
     
 
 def execute_drop(item_id):
@@ -281,9 +278,10 @@ def execute_drop(item_id):
     global current_mass
     for items in all_items:
         if items["id"] == item_id:
-            inventory.remove(items)
-            current_room["items"].append(items)
-            current_mass -= int((items["mass"]))
+            if items in inventory:
+                inventory.remove(items)
+                current_room["items"].append(items)
+                current_mass -= int((items["mass"]))
     pass  
 
 def execute_command(command):
@@ -361,16 +359,27 @@ def move(exits, direction):
 def main():
 
     # Main game loop
-    while True:
+    not1=True
+    while not1:
         # Display game status (room description, inventory etc.)
-        print_room(current_room)
-        print_inventory_items(inventory)
+        if current_room["name"] == "the parking lot":
+            for items in current_room["items"]:
+                print(items["name"])
+                if items["name"] == "id card":
+                    print("YAY YOU WIN!!")
+                    not1 = False
+
+
+        if not1 == True: 
+            print_room(current_room)
+            print_inventory_items(inventory)
 
         # Show the menu with possible actions and ask the player
-        command = menu(current_room["exits"], current_room["items"], inventory)
+            command = menu(current_room["exits"], current_room["items"], inventory)
 
         # Execute the player's command
-        execute_command(command)
+            execute_command(command)
+
 
 
 

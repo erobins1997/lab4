@@ -140,8 +140,8 @@ def print_menu(exits):
     Where do you want to go?
     """
     print("You can:")
-    for i in exits.items():
-        print_menu_line(i, exit_leads_to(exits, direction))
+    for i in exits:
+        print_menu_line(i, exit_leads_to(exits, i))
     
     # COMPLETE THIS PART:
     # Iterate over available exits:
@@ -184,9 +184,9 @@ def menu(exits):
     prompted, repeatedly, until a correct choice is entered."""
 
     # Repeat until the player enter a valid choice
-    pass
     while True:
         print_menu(exits)
+        user_input = input()
 
         if is_valid_exit(exits,user_input):
             return user_input
